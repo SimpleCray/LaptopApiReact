@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 
 
 function AddEdit() {
@@ -47,7 +46,7 @@ function AddEdit() {
                 </div>
                 <div className="form-group col-12">
                     <label>Image</label>
-                    <input name="image" type="text" className="form-control"/>
+                    <input name="image" type="file" className="form-control" style={{height: '70px'}}/>
                 </div>
             </div>
             <div className="form-group">
