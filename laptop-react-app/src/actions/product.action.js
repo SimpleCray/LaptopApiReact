@@ -1,4 +1,5 @@
-import apiService from "../services/apiService.service"
+import apiService from "../services/api.service"
+
 
 
 export const ACTION_TYPES = {
@@ -9,7 +10,7 @@ export const ACTION_TYPES = {
 }
 
 export const fetchAll = () => dispatch => {
-    apiService.product().fetchAll()
+    apiService.products().fetchAll()
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.FETCH_ALL,
@@ -20,7 +21,7 @@ export const fetchAll = () => dispatch => {
 }
 
 export const create = (data, onSuccess) => dispatch => {
-    apiService.product().create(data)
+    apiService.products().create(data)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.CREATE,
@@ -32,7 +33,7 @@ export const create = (data, onSuccess) => dispatch => {
 }
 
 export const update = (id, data, onSuccess) => dispatch => {
-    apiService.product().update(id, data)
+    apiService.products().update(id, data)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.UPDATE,
@@ -44,7 +45,7 @@ export const update = (id, data, onSuccess) => dispatch => {
 }
 
 export const Delete = (id, onSuccess) => dispatch => {
-    apiService.product().delete(id)
+    apiService.products().delete(id)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.DELETE,

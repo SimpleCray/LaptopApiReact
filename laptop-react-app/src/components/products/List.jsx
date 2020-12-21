@@ -1,44 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as actions from '../../actions/product.action'
 
 
 
 function List({ match }) {
+    const dispatch = useDispatch()
     const { path } = match;
-    //const [products, setProducts] = useState(null);
+    //useSelector is the replacement for mapStateToProps to use state in redux store (can use in function only)
+    const products = useSelector(state => state.product.list);//get from root reducer
+    //const loading = useSelector(state => state.productAction.loading)
 
-    const products = [
-        {
-            "id": 1,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 2,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 3,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 4,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-      ]
 
     useEffect(() => {
+        dispatch(actions.fetchAll())
     }, []);
 
     function deleteProduct(id) {
@@ -69,18 +45,10 @@ function List({ match }) {
                     </div>
                     )}
                     {!products &&
-                        <tr>
-                            <td colSpan="4" className="text-center">
-                                <div className="spinner-border spinner-border-lg align-center"></div>
-                            </td>
-                        </tr>
+                        <div className="spinner-border spinner-border-lg align-center"></div>
                     }
                     {products && !products.length &&
-                        <tr>
-                            <td colSpan="4" className="text-center">
-                                <div className="p-2">No Products To Display</div>
-                            </td>
-                        </tr>
+                        <div className="p-2">No Products To Display</div>
                     }
                 </div>
             </div>

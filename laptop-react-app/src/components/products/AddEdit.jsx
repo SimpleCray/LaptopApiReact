@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import * as actions from '../../actions/product.action'
 import { Link } from 'react-router-dom';
 
 
-function AddEdit() {
-    const isAddMode = true;
+function AddEdit(match) {
+    const dispatch = useDispatch()
+    const products = useSelector(state => state.product.list);//get from root reducer
+    const [product, setProduct] = useState({});
+    const { id } = match.match.params;
+    const isAddMode = !id;
+
     function onSubmit(data) {
         return 
     }
@@ -13,8 +20,6 @@ function AddEdit() {
 
     function updateProduct(id, data) {
     }
-
-    const [product, setProduct] = useState({});
 
     useEffect(() => {
         if (isAddMode) {

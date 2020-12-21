@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
 
-const baseApi = "http://localhost:64447/api"
+const baseApi = "http://localhost:64447/api/"
 
 export default {
 
