@@ -6,7 +6,8 @@ export const ACTION_TYPES = {
     CREATE: 'CREATE',
     UPDATE: 'UPDATE',
     DELETE: 'DELETE',
-    FETCH_ALL: 'FETCH_ALL'
+    FETCH_ALL: 'FETCH_ALL',
+    FETCH_BY_ID: 'FETCH_BY_ID',
 }
 
 export const fetchAll = () => dispatch => {
@@ -20,6 +21,17 @@ export const fetchAll = () => dispatch => {
         .catch(err => console.log(err))
 }
 
+export const fetchById = (id) => dispatch => {
+    apiService.products().fetchById(id)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_BY_ID,
+                payload: response.data
+            })
+        })
+        .catch(err => console.log(err))
+}
+
 export const create = (data, onSuccess) => dispatch => {
     apiService.products().create(data)
         .then(res => {
@@ -27,7 +39,6 @@ export const create = (data, onSuccess) => dispatch => {
                 type: ACTION_TYPES.CREATE,
                 payload: res.data
             })
-            onSuccess()
         })
         .catch(err => console.log(err))
 }
@@ -39,7 +50,6 @@ export const update = (id, data, onSuccess) => dispatch => {
                 type: ACTION_TYPES.UPDATE,
                 payload: { id, ...data }
             })
-            onSuccess()
         })
         .catch(err => console.log(err))
 }
@@ -51,7 +61,6 @@ export const Delete = (id, onSuccess) => dispatch => {
                 type: ACTION_TYPES.DELETE,
                 payload: id
             })
-            onSuccess()
         })
         .catch(err => console.log(err))
 }

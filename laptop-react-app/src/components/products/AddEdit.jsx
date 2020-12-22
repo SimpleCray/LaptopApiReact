@@ -3,72 +3,63 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../actions/product.action'
 import { Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
+import { makeStyles } from '@material-ui/core/styles';
 
 
 function AddEdit(match) {
+    let product = useSelector(state => state.product.product)
     const dispatch = useDispatch()
-    const products = useSelector(state => state.product.list);//get from root reducer
     const { register, handleSubmit, setValue, errors } = useForm(); // initialize the react hook form
     const { id } = match.match.params;
     const isAddMode = !id;
-
-    const products2 = [
-        {
-            "id": 1,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 2,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 3,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-        {
-            "id": 4,
-            "name": "Alienware Area 51",
-            "supplier": "Dell",
-            "price": 4000,
-            "imgUrl": "http://loremflickr.com/250/300"
-        },
-      ]
+    const [alert, setAlert] = useState(null)
 
     function onSubmit(data) {
-        return 
+        isAddMode ? createProduct(data) : updateProduct(product.id, data)
     }
 
     function createProduct(data) {
+        dispatch(actions.create(data))
+        setAlert("Insert Product success")
     }
 
     function updateProduct(id, data) {
+        dispatch(actions.update(id, data))
+        setAlert("Update Product success")
     }
 
     useEffect(() => {
-        let product = {}
         if (!isAddMode) {
-            for (let item of products2){
-                if (item.id == id) product = item
-            }
-            const fields = ['name', 'supplier', 'price', 'image'];
-            console.log(product)
-            fields.forEach(field => setValue(field, product[field]));
+            dispatch(actions.fetchById(id))
         }
     }, []);
+    if (product) {
+        const fields = ['id', 'name', 'supplier', 'price', 'imgUrl'];
+        
+        fields.forEach(field => setValue(field, product[field]));
+    }
+
+    //Alert style
+    const useStyles = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        '& > * + *': {
+        marginTop: theme.spacing(2),
+        },
+    },
+    }));
+    const classes = useStyles();
 
     return (
-        <form onSubmit={(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <h1>{isAddMode ? 'Add Product' : 'Edit Product'}</h1>
+            { alert && 
+                <div className={'alert alert-success'}>
+                    {alert}
+                </div>
+            }
             <div className="form-row">
+                {/* <input name="id" type="text" ref={register} hidden/> */}
                 <div className="form-group col-4">
                     <label>Name</label>
                     <input name="name" type="text" ref={register({ required: true })} className="form-control"/>
@@ -82,8 +73,8 @@ function AddEdit(match) {
                     <input name="price" type="number" ref={register({ required: true })} className="form-control"/>
                 </div>
                 <div className="form-group col-12">
-                    <label>Image</label>
-                    <input name="image" type="file" ref={register({ required: true })} className="form-control" style={{height: '70px'}}/>
+                    <label>Image Url</label><br></br>
+                    <input name="imgUrl" type="text" ref={register} className="form-control" style={{height: '70px'}}/>
                 </div>
             </div>
             <div className="form-group">

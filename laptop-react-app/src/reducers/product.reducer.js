@@ -14,6 +14,12 @@ export const productReducer = (state = initialState, action) => {
                 list: [...action.payload]
             }
 
+        case ACTION_TYPES.FETCH_BY_ID:
+            return {
+                ...state,
+                product: action.payload
+            }
+
         case ACTION_TYPES.CREATE:
             return {
                 ...state,
