@@ -102,11 +102,12 @@ function List({ match }) {
                         <p></p>
                     </div>
                     )}
-                    {!products &&
+                    {/* {!products &&
                         <div className="spinner-border spinner-border-lg align-center"></div>
-                    }
+                    } */}
                     {products && !products.length &&
-                        <div className="p-2">No Products To Display</div>
+                        //<div className="p-2">No Products To Display</div>
+                        <div className="spinner-border spinner-border-lg align-center"></div>
                     }
                 </div>
             </div>

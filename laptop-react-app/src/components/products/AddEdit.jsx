@@ -81,7 +81,7 @@ function AddEdit(match) {
                 <button type="submit" className="btn btn-primary">
                     Save
                 </button>
-                <Link to={isAddMode ? '.' : '..'} className="btn btn-link">Cancel</Link>
+                <Link to={isAddMode ? '.' : '..'} className="btn btn-link">Back to list</Link>
             </div>
         </form>
     );
