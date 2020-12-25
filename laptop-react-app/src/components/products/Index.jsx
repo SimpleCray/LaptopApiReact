@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import AddEdit from './AddEdit';
 
 import { List } from './List';
-import { AddEdit } from './AddEdit';
 
 function Products({ match }) {
     const { path } = match;

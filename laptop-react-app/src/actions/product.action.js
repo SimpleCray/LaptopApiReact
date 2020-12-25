@@ -32,7 +32,7 @@ export const fetchById = (id) => dispatch => {
         .catch(err => console.log(err))
 }
 
-export const create = (data, onSuccess) => dispatch => {
+export const create = (data) => dispatch => {
     apiService.products().create(data)
         .then(res => {
             dispatch({
@@ -43,7 +43,7 @@ export const create = (data, onSuccess) => dispatch => {
         .catch(err => console.log(err))
 }
 
-export const update = (id, data, onSuccess) => dispatch => {
+export const update = (id, data) => dispatch => {
     apiService.products().update(id, data)
         .then(res => {
             dispatch({
@@ -54,7 +54,7 @@ export const update = (id, data, onSuccess) => dispatch => {
         .catch(err => console.log(err))
 }
 
-export const Delete = (id, onSuccess) => dispatch => {
+export const Delete = (id) => dispatch => {
     apiService.products().delete(id)
         .then(res => {
             dispatch({

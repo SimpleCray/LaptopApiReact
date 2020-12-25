@@ -22,7 +22,7 @@ function List({ match }) {
     useEffect(() => {
         dispatch(actions.fetchAll())
         setProducts(allProducts)
-    }, [allProducts == products == []]); //second parameter use to inform useEffect run when this parameter changes
+    }, [allProducts == products == [], ]); //second parameter use to inform useEffect run when this parameter changes
     
     function deleteProduct(id) {
         if (window.confirm("Are you sure ?")){
@@ -88,9 +88,7 @@ function List({ match }) {
                     {products && products.map(product =>
                     <div className="col-md-3" key={product.id} style={{justifyContent: 'center'}}>
                         
-                        <img 
-                            src={product.imgUrl.includes("http") ? product.imgUrl : "https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg"} 
-                            width='100%' height='35%' style={{margin:'15px 0', float: 'left',}}/>
+                        <img src={product.imageSrc} width='100%' height='35%' style={{margin:'15px 0', float: 'left',}} alt=''/>
                         <h4>{product.name}</h4>
                         <div>Supplier: {product.supplier}</div>
                         <div>Price: {product.price}</div>
@@ -102,12 +100,11 @@ function List({ match }) {
                         <p></p>
                     </div>
                     )}
-                    {/* {!products &&
+                    {!products &&
                         <div className="spinner-border spinner-border-lg align-center"></div>
-                    } */}
+                    }
                     {products && !products.length &&
-                        //<div className="p-2">No Products To Display</div>
-                        <div className="spinner-border spinner-border-lg align-center"></div>
+                        <div className="p-2">No Products To Display</div>
                     }
                 </div>
             </div>

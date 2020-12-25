@@ -2,56 +2,92 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from '../../actions/product.action'
 import { Link } from 'react-router-dom';
-import { useForm } from "react-hook-form";
-import { makeStyles } from '@material-ui/core/styles';
 
+const defaultImageSrc = "https://st4.depositphotos.com/17828278/24401/v/600/depositphotos_244011872-stock-illustration-image-vector-symbol-missing-available.jpg"
 
-function AddEdit(match) {
+const initialFieldValues = {
+    name: '',
+    price: '',
+    supplier: '',
+    imageSrc: defaultImageSrc,
+    imageFile: null
+}
+
+const AddEdit = (match) => {
     let product = useSelector(state => state.product.product)
+    const [values, setValues] = useState(initialFieldValues)
     const dispatch = useDispatch()
-    const { register, handleSubmit, setValue, errors } = useForm(); // initialize the react hook form
     const { id } = match.match.params;
     const isAddMode = !id;
     const [alert, setAlert] = useState(null)
 
-    function onSubmit(data) {
-        isAddMode ? createProduct(data) : updateProduct(product.id, data)
+    function onSubmit(e) {
+        e.preventDefault()
+        let formData = new FormData()
+            formData.append('name', values.name)
+            formData.append('price', values.price)
+            formData.append('supplier', values.supplier)
+            formData.append('imgName', values.imgName)
+            formData.append('imageFile', values.imageFile)
+            if (isAddMode) {
+                createProduct(formData)
+            } else {
+                formData.append('id', product.id)
+                updateProduct(product.id, formData)
+            }
+        
     }
 
     function createProduct(data) {
         dispatch(actions.create(data))
-        setAlert("Insert Product success")
+        //setAlert("Insert Product success")
     }
 
     function updateProduct(id, data) {
         dispatch(actions.update(id, data))
-        setAlert("Update Product success")
+        //setAlert("Update Product success")
     }
 
     useEffect(() => {
         if (!isAddMode) {
             dispatch(actions.fetchById(id))
+            product && setValues(product)
+            console.log(product)
         }
-    }, []);
-    if (product) {
-        const fields = ['id', 'name', 'supplier', 'price', 'imgUrl'];
-        
-        fields.forEach(field => setValue(field, product[field]));
+    }, [product == null, isAddMode, product && (id != product.id)])
+
+    const handleInputChange = e => {
+        const { name, value } = e.target;
+        setValues({
+            ...values,
+            [name]: value
+        })
     }
 
-    //Alert style
-    const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-        marginTop: theme.spacing(2),
-        },
-    },
-    }));
-    const classes = useStyles();
+    const showPreview = e => {
+        if (e.target.files && e.target.files[0]) {
+            let imageFile = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = x => {
+                setValues({
+                    ...values,
+                    imageFile,
+                    imageSrc: x.target.result
+                })
+            }
+            reader.readAsDataURL(imageFile)
+        }
+        else {
+            setValues({
+                ...values,
+                imageFile: null,
+                imageSrc: defaultImageSrc
+            })
+        }
+    }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={(onSubmit)}>
             <h1>{isAddMode ? 'Add Product' : 'Edit Product'}</h1>
             { alert && 
                 <div className={'alert alert-success'}>
@@ -59,22 +95,26 @@ function AddEdit(match) {
                 </div>
             }
             <div className="form-row">
-                {/* <input name="id" type="text" ref={register} hidden/> */}
                 <div className="form-group col-4">
                     <label>Name</label>
-                    <input name="name" type="text" ref={register({ required: true })} className="form-control"/>
+                    <input name="name" value={values && values.name} type="text" className="form-control" onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-4">
                     <label>Supplier</label>
-                    <input name="supplier" ref={register({ required: true })} className="form-control"/>
+                    <input name="supplier" value={values && values.supplier} className="form-control" onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-4">
                     <label>Price</label>
-                    <input name="price" type="number" ref={register({ required: true })} className="form-control"/>
+                    <input name="price" value={values && values.price} type="number" className="form-control" onChange={handleInputChange}/>
                 </div>
-                <div className="form-group col-12">
-                    <label>Image Url</label><br></br>
-                    <input name="imgUrl" type="text" ref={register} className="form-control" style={{height: '70px'}}/>
+                {values &&
+                    <div className="form-group col-4">
+                        <img src={values.imageSrc} className="card-img-top" alt=""/>
+                    </div>
+                }
+                <div className="form-group col-8">
+                    <label>Choose image</label><br></br>
+                    <input type="file" accept="image/*" className="form-control-file" onChange={showPreview} id="image-uploader" />
                 </div>
             </div>
             <div className="form-group">
@@ -87,4 +127,4 @@ function AddEdit(match) {
     );
 }
 
-export { AddEdit };
+export default ( AddEdit );

@@ -37,10 +37,10 @@ namespace LaptopAPI.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.ImgUrl)
+                entity.Property(e => e.ImgName)
                     .HasMaxLength(100)
                     .IsUnicode(false)
-                    .HasColumnName("imgUrl");
+                    .HasColumnName("imgName");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(100)

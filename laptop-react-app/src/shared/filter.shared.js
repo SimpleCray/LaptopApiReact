@@ -1,6 +1,6 @@
 export default function productFilter(filterData, list) {
 
-  const excludeKeys = ["id", "price", "imgUrl"];
+  const excludeKeys = ["id", "price", "imgName", "imageSrc", "imageFile"];
   let filteredList = list.filter(item => {
     let matched = true
     Object.keys(item).some(key => {
