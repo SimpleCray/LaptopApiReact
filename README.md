@@ -7,3 +7,4 @@ npm install react-hook-form
 npm install react-alert
 npm install react-alert react-alert-template-basic
 npm install @material-ui/lab
+npm install suggestion-react-input-search

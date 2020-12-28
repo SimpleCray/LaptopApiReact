@@ -5,23 +5,37 @@ import { Link } from 'react-router-dom';
 import { FormGroup, FormControlLabel, Switch} from '@material-ui/core';
 import * as actions from '../../actions/product.action'
 import productFilter from '../../shared/filter.shared';
+import inputSuggest from '../../shared/suggest.shared';
 
+import testProduct from './testProduct.json'
 
+//Autocomplete
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+
+const initialFieldValues = {
+    name: '',
+    price: '',
+    supplier: '',
+}
 
 function List({ match }) {
     const dispatch = useDispatch()
     const { path } = match;
     //const loading = useSelector(state => state.productAction.loading)
-    let [products, setProducts] = useState(null)
+    let [products, setProducts] = useState(testProduct)
+    const [values, setValues] = useState(initialFieldValues)
 
     //useSelector is the replacement for mapStateToProps to use state in redux store (can use in function only)
-    let allProducts = useSelector(state => state.product.list);//get from root reducer
+    //let allProducts = useSelector(state => state.product.list);//get from root reducer
+    let allProducts = testProduct
 
     const [isAdvanceFilter, setIsAdvanceFilter] = useState(false)
     const { register, handleSubmit, setValue, errors } = useForm(); // initialize the react hook form
+    
     useEffect(() => {
-        dispatch(actions.fetchAll())
-        setProducts(allProducts)
+        //dispatch(actions.fetchAll())
+        //setProducts(allProducts)
     }, [allProducts == products == [], ]); //second parameter use to inform useEffect run when this parameter changes
     
     function deleteProduct(id) {
@@ -37,6 +51,24 @@ function List({ match }) {
         setProducts(filteredList)
     }
 
+    function retriveSuggest (fieldName) {
+        if (allProducts) {
+            let suggestList = inputSuggest(fieldName, allProducts)
+            console.log(suggestList)
+            return suggestList
+        }
+        return []
+    }
+
+    const handleInputChange = (e, value) => {
+        const name = e.target.id.split('-')[0];
+        setValues({
+            ...values,
+            [name]: value
+        })
+        console.log(values)
+    }
+
     return (
         <div>
             <h1>Products</h1>
@@ -47,33 +79,47 @@ function List({ match }) {
             <form onSubmit={handleSubmit(onSubmitFilter)} style={{boder: '1px solid grey'}}>
                 {isAdvanceFilter ?
                 <div className="form-row">
-                    <div className="form-group col-3">
-                        <label>Name</label>
-                        <input name="name" type="text" ref={register} placeholder="Search by Name..." className="form-control"/>
+                    <div className="form-group col-6">
+                    <Autocomplete
+                        id="name"
+                        options={(retriveSuggest('name'))}
+                        getOptionLabel={(option) => option.name}
+                        //style={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Search by name" variant="outlined" />}
+                        onChange={(handleInputChange)}
+                    />
                         {/* {errors.name && <div className="alert alert-danger" style={{padding: '.25rem'}}>Name is required</div>} */}
                     </div>
-                    <div className="form-group col-3">
-                        <label>Supplier</label>
-                        <input name="supplier" ref={register} placeholder="Search by Supplier..." className="form-control"/>
+                    <div className="form-group col-6">
+                        <Autocomplete
+                            id="supplier"
+                            options={(retriveSuggest('supplier'))}
+                            getOptionLabel={(option) => option.supplier}
+                            //style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Search by suppier" variant="outlined" />}
+                            onChange={(handleInputChange)}
+                        />
                     </div>
                     <div className="form-group col-3">
                         <label>Min price</label>
-                        <input name="min" ref={register} placeholder="Min price..." type="number" className="form-control"/>
+                        <input id="min" onChange={(handleInputChange)} placeholder="Min price..." type="number" className="form-control"/>
                     </div>
                     <div className="form-group col-3">
                         <label>Max price</label>
-                        <input name="max" ref={register} placeholder="Max price..." type="number" className="form-control"/>
+                        <input id="max" onChange={(handleInputChange)} placeholder="Max price..." type="number" className="form-control"/>
                     </div>
                 </div>:
                 <div className="form-row">
-                    <div className="form-group col-3">
-                        <label>Name</label>
-                        <input name="name" type="text" ref={register} placeholder="Search by Name..." className="form-control"/>
-                        {/* {errors.name && <div className="alert alert-danger" style={{padding: '.25rem'}}>Name is required</div>} */}
+                    <div className="form-group col-6">
+                        <Autocomplete
+                            id="name"
+                            options={(retriveSuggest('name'))}
+                            getOptionLabel={(option) => option.name}
+                            //style={{ width: 300 }}
+                            renderInput={(params) => <TextField {...params} label="Search by name" variant="outlined" />}
+                            onChange={(handleInputChange)}
+                        />
                     </div>
-                    <input name="supplier" ref={register} className="form-control" hidden/>
-                    <input name="min" ref={register} type="number" className="form-control" hidden/>
-                    <input name="max" ref={register} type="number" className="form-control" hidden/>
                 </div>}
                 <div className="form-group">
                     <button type="submit" className="btn btn-primary">
